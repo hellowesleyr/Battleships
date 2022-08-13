@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title><%=htmlWebpackPlugin.options.title%></title>
+  </head>
+  <body>
+    <div id="content">
+        <div class="sideImage">
+          hello
+        </div>
+        <button class="debug">Test email validation</button>
+            <form autocomplete="off" action="" novalidate class="myForm formWrapper" >
+              <div class="email inputWrapper">
+                <label for="email">Email Address:</label>
+                <input  type="email" name="email" id="signUpEmail" required>
+                <span class="emailError error"></span>
+              </div>
+              <div class="country inputWrapper">
+                <label for="country">Country:</label>
+                <select filter="true" required placeholder="Please select..."  name="country" id="signUpCountry">
+                  <option value="" selected default>Please Select:</option>
+                  </select>
+                  <!-- <input type="text"> -->
+                <span class="countryError error"></span>
+              </div>
+              <div class="postcode inputWrapper">
+                <label for="postcode">Postcode</label>
+                <input type="text" name="postcode" placeholder="e.g AB1 2CD " id="signUpPostcode" required>
+                <span class="postcodeError error"></span>
+              </div>
+              <div class="password inputWrapper">
+                <label for="password">Password:</label>
+                <input type="password" name="password" id="signUpPassword" id="signUpPassword" required>
+                <span class="passwordError error"></span>
+              </div>
+              <div class="confirmPassword inputWrapper">
+                <label for="passwordconfirm"> Confirm Password:</label>
+                <input type="password" name="passwordconfirm" id="signUpConfirmPassword" required>
+                <span class="passwordError error"></span>
+              </div>
+              <div class="inputWrapper submit">
+                <input type="submit" id="signUp" value="Sign Up">
+              </div>
+            </form>
+    </div>
+  </body>
+</html>
