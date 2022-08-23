@@ -193,6 +193,9 @@ const addBoardEventListners = (game) => {
                 console.log(`player ship remaining ${player1.playerShipsToPlace}`)
               }
             }
+            if (game.activePlayer.team == 2 && game.activePlayer.attacking == true) {
+              
+            } 
           })
           currentElem.addEventListener('mouseover',e => {
             if (player1.placingShips == true) {
@@ -204,6 +207,7 @@ const addBoardEventListners = (game) => {
                 shipDiv.style.top = (mouseY + 5 ) + "px";              
             }
           })
+        
         }
         if (t==2) {
           let currentCell = player2.board.cells[i][j];

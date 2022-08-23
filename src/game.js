@@ -18,8 +18,16 @@ const createGame = () => {
     const entry = () => {
         DOMmanager.displayMenu();
     }
-    const makeAttack = () => {
+    const makeAttack = (x,y) => {
+        let enemyPlayer;
+        if (game.activePlayer.team == 2) {
+            enemyPlayer = game.player1;
 
+        }
+        else if (game.activePlayer.team == 1) {
+            enemyPlayer = game.player2;
+        }
+        
     }
     const intializeGame = (singlePlayer) => {
          game.player1 = createPlayer(false,1);
@@ -50,8 +58,8 @@ const createGame = () => {
             if (first == true) {
                 // placeTestShips(game);
                 // game.player1.playerShipsToPlace = [];
-                // game.player1.placeAIShips();
-                // game.player1.placingShips = false;
+                game.player1.placeAIShips();
+                game.player1.placingShips = false;
                 // passOverTurn(DOMmanager);
                 // passOverTurn(DOMmanager);
                 first = false;
