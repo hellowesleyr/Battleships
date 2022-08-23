@@ -1,11 +1,157 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+SC:wght@300&family=Nunito:ital,wght@1,300&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Secular+One&display=swap');
 :root {
   --errorHeight: 1rem;
+  --DeepBackground: #0369A1;
+  --hoverBackground: #0EA5E9;
+  --LargeText: #FBBF24;
+  --boardCellLength: 36px;
+
 }
 
-body {
+.navbar {
+  color: var(--LargeText);
+  display: flex;
+  flex-direction: row;
   
+  align-items: center;
+}
+
+.handoverPanel {
+  background-color: var(--hoverBackground);
+  color: var(--LargeText);
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
+  position: absolute ;
+}
+
+.active {
+  display:flex;
+}
+
+.inactive {
+  display: none;
+}
+
+.handoverButton {
+  background-color: darkgreen;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 48px;
+  padding: 10px 20px;
+  
+  text-align: center;
+}
+
+.gameContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.placementShip {
+  position: absolute;
+  background-color: red;
+  z-index: 2;
+}
+
+.gameInfo {
+  font-size: 20px;
+  color: var(--LargeText);
+  margin: 1vh;
+}
+
+.gameInfoBottom {
+  font-size: 20px;
+  color: var(--LargeText);
+  margin: 1vh;
+}
+
+.boardContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+
+}
+
+.board {
+  border: solid black 2px;
+  display: grid;
+  grid-template-columns: repeat(10,1fr);
+  grid-auto-rows: var(--boardCellLength);
+  gap: 2px;
+  margin-right: 5vw;
+  margin-left: 5vw;
+  height:fit-content
+}
+
+.boardCell {
+  height: var(--boardCellLength);
+  width: var(--boardCellLength);
+  justify-content: center;
+  align-items: center;
+  display: flex;
+  background-color: #38BDF8;
+}
+
+.handoverButton {
+
+}
+
+.menu {
+flex:1;
+font-size: 24px;
+}
+
+.title {
+  font-size: 32px;
+
+  flex: 1.2;
+}
+
+
+
+#content {
+  display: inline-flex;
+  flex-direction: column;
+  height: 100vh;
+  justify-content: center;
+  /* flex-wrap: wrap; */
+}
+
+.columnContainer {
+  display: flex;
+  flex-direction: column;
+
+}
+
+.menuOption {
+display: flex;
+justify-content: center;
+align-items: center;
+margin: 10px;
+padding: 20px;
+font-size: 24px;
+background-color: #0284C7;
+color: var(--LargeText);
+transition: all;
+}
+
+.menuOption:hover {
+  background-color: var(--hoverBackground);
+
+}
+
+
+
+
+
+body {
+  background-color: var(--DeepBackground);
+  font-family: 'Secular One', sans-serif;
 }
 
 select {

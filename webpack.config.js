@@ -1,4 +1,7 @@
 const path = require('path');
+// import path from 'path'
+// import HtmlWebpackPlugin from 'html-webpack-plugin';
+// import { BundleAnalyzerPlugin } from 'webpack-bundle-analyzer';
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const BundeAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
