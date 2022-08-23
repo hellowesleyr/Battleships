@@ -28,6 +28,7 @@ const createShip = (length, x, y, orientation, team) => {
     length,
     test: false,
     segments,
+    orientation,
     sunk: false,
     team,
     hit,

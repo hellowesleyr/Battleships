@@ -106,6 +106,7 @@ const createBoard = () => {
   }
   const placeShip = (length, x, y, orientation, team) => {
     //Validation
+    console.log(orientation);
     let maxY = 0;
     let maxX = 0;
     let occupyingAndAdjacentCells  = [];
@@ -125,7 +126,7 @@ const createBoard = () => {
       dX = 1;
     }
       for (let c = -1; c<2; c++) {
-        for (let i = 0; i<length;i++) {
+        for (let i = 0; i<length+1;i++) {
           let currentX = x+dX*i;
           let currentY = y+dY*i;
           if (currentX < 0 || currentX > 9 || currentY < 0 || currentY > 9) {
@@ -175,7 +176,15 @@ const createBoard = () => {
       //DOSTuff
       board.getSegmentCoords(x,y,currentShip.length,currentShip.orientation);
       currentCell.position.hit = true;
-      currentShip.isSunk();
+      let sunkShip = currentShip.isSunk();
+      if (sunkShip) {
+        let adjacentCoords;
+        alert('ship sunk');
+        // adjacentCoords.forEach(coord => {
+        //   board.cells[x][y].mustBeEmpty = true;
+
+        // });
+      }
     }
     return currentCell;
   };

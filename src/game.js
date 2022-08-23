@@ -18,17 +18,23 @@ const createGame = () => {
     const entry = () => {
         DOMmanager.displayMenu();
     }
-    const makeAttack = (x,y) => {
+    const makeAttack = (x,y,domManager) => {
         let enemyPlayer;
         if (game.activePlayer.team == 2) {
             enemyPlayer = game.player1;
-
         }
         else if (game.activePlayer.team == 1) {
             enemyPlayer = game.player2;
         }
+        enemyPlayer.board.receiveAttack(x,y);
+        
+        game.activePlayer.attacking = false;
+        passOverTurn(domManager);
+        game.activePlayer.attacking = true;
+
         
     }
+    
     const intializeGame = (singlePlayer) => {
          game.player1 = createPlayer(false,1);
         if (singlePlayer == true) {
@@ -44,12 +50,13 @@ const createGame = () => {
     }
     const passOverTurn = (DOMmanager) => {
         DOMmanager.toggleHandover();
-        if (game.activePlayer.team = 1) {
+        if (game.activePlayer.team == 1) {
             game.activePlayer = game.player2;
         }
-        else if (game.activePlayer.team = 2) {
+        else if (game.activePlayer.team == 2) {
             game.activePlayer = game.player1;
         }
+
     }
     let first = true;
     const main = (DOMmanager) => {
@@ -75,8 +82,8 @@ const createGame = () => {
             game.phase = 'player 1 placing ships'
             if (game.player1.placingShips == true) {
                 if (game.player2.robot == false) {
-                    alert('player 2 is now placing ships')
-                    alert(`player 1 is still placing ships?`)
+                    // alert('player 2 is now placing ships')
+                    // alert(`player 1 is still placing ships?`)
                     
                     game.player2.placingShips = true;
                     passOverTurn(DOMmanager);
@@ -93,6 +100,7 @@ const createGame = () => {
          if (game.player1.placingShips == false && game.player2.placingShips == false) {
             DOMmanager.disablePlacementShip()
             game.phase = `player ${game.activePlayer.team} attacking`
+            game.activePlayer.attacking = true;
          }
       }
     }
@@ -104,6 +112,7 @@ const createGame = () => {
         activePlayer,
         entry,
         intializeGame,
+        makeAttack,
         main,
     }
     return game;

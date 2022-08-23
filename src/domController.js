@@ -9,6 +9,7 @@ const createController = () => {
   let player1BoardElem;
   let player2BoardElem;
   let placementShipDiv = document.createElement('div');
+  let battleInfoDiv  = document.createElement('div');
   placementShipDiv.classList.add('placementShip');
   let navBarHTML = `<div class="menu">
     Menu
@@ -32,7 +33,6 @@ let gameInfoHTML = '<span class="currentPlayer">Current player: player 1</span>'
 
 const toggleHandover = () => {
   let element = document.querySelector('.handoverPanel')
-  alert(element)
   if (element.classList.contains('active')) {
     element.classList.remove('active');
     element.classList.add('inactive')
@@ -44,6 +44,7 @@ const toggleHandover = () => {
 }
 
 const drawBoards = (game,player) => {
+  
   let friendlyBoardElem;
   let enemyBoardElem;
   let friendlyPlayer;
@@ -71,6 +72,13 @@ const drawBoards = (game,player) => {
         let currentEnemyCell = enemyPlayer.board.cells[i][j];
         let cellElem = currentCell.cellElem;
         let enemyCellElem = currentEnemyCell.cellElem;
+        //Reset the cell;
+        cellElem.innerText = '';
+        cellElem.style['background-color'] = '#0EA5E9';
+        enemyCellElem.innerText = '';
+        enemyCellElem.style['background-color'] = '#0EA5E9';
+
+        //Draw the cells
         if (currentCell.hit == true) {
           cellElem.innerText = 'X';
         }
@@ -79,14 +87,14 @@ const drawBoards = (game,player) => {
         }
         if (currentCell.ship!=undefined) {
           if (currentCell.ship.isSunk == true) {
-            cellElem.style['background-color'] = 'darkred';
+            cellElem.style['background-color'] = 'red';
           }
           else if (currentCell.ship.isSunk != true) {
             cellElem.style['background-color'] = 'green';
           }
         }
         if (currentEnemyCell.ship!=undefined) {
-          if (currentEnemyCell.ship.isSunk == true) {
+          if (currentEnemyCell.ship.isSunk == true || currentEnemyCell.hit == true) {
             enemyCellElem.style['background-color'] = 'darkred';
           }
         }
@@ -106,7 +114,6 @@ const addEventListeners = (game) => {
   let handoverPanel = document.querySelector('.handoverPanel')
   handoverPanel.addEventListener('click', event => {
     toggleHandover(handoverPanel);
-    alert('clicked')
   })
 }
 
@@ -178,6 +185,9 @@ const addBoardEventListners = (game) => {
           let currentCell = player1.board.cells[i][j];
           let currentElem = currentCell.cellElem;
           currentElem.addEventListener('click',e => {
+            if (currentCell.ship!=undefined) {
+              alert(currentCell.ship.orientation);
+            }
             if (player1.placingShips == true) {
               let x = currentCell.x;
               let y = currentCell.y;
@@ -194,7 +204,7 @@ const addBoardEventListners = (game) => {
               }
             }
             if (game.activePlayer.team == 2 && game.activePlayer.attacking == true) {
-              
+              game.makeAttack(currentCell.x,currentCell.y,DOMmanager);
             } 
           })
           currentElem.addEventListener('mouseover',e => {
@@ -214,7 +224,9 @@ const addBoardEventListners = (game) => {
           let currentElem = currentCell.cellElem;
           currentElem.style['background-color'] = 'orange';
           currentElem.addEventListener('click',e => {
-            alert(player2.placingShips);
+            console.log(`active player is ${game.activePlayer.team}`)
+            console.log(`active palyer is attacking? ${game.activePlayer.attacking}`)
+
             if (player2.placingShips == true) {
               alert('player 2 placing ships')
               let x = currentCell.x;
@@ -231,8 +243,10 @@ const addBoardEventListners = (game) => {
                 console.log(`player ship remaining ${player2.playerShipsToPlace}`)
             }
           }
-          })
-
+          if (game.activePlayer.team == 1 && game.activePlayer.attacking == true) {
+            game.makeAttack(currentCell.x,currentCell.y,DOMmanager);
+          }
+          });
         }
         //Hover placement
         // currentElem.addEventListener("mouseover", event => {
