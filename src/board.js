@@ -29,6 +29,30 @@ const createBoard = () => {
     }
     cells.push(thisCol);
   }
+
+  const checkNeighboursEmpty = (cell) => {
+    // alert(`${cell.x}, ${cell.y}`);
+    for (let i = -1; i<2; i+=2) {
+      for (let j = -1; j<2; j+=2) {
+
+        let currentX = cell.x+i;
+        let currentY = cell.y+j;
+        if (inbounds(currentX) && inbounds(currentY)) {
+          // alert('got here')
+          if (board.cells[currentX][currentY].ship != undefined) {
+            return false;
+          }
+          else {
+            continue;
+          }
+        } 
+      }
+    }
+    // alert('this cell is good')
+    return true
+  }
+
+
   const getSegmentCoords = (Ox, Oy, length, orientation) => {
     let coords = [];
     let dx;
@@ -49,6 +73,7 @@ const createBoard = () => {
         y: y_i,
       });
     }
+    console.log(coords);
     return coords;
   };
   const queryBoardSunk  = () => {
@@ -150,15 +175,19 @@ const createBoard = () => {
     let thisShip = createShip(length, x, y, orientation, team);
     let originCell = board.cells[x][y];
     // console.log(board.cells[x][y])
-    originCell.ship = thisShip;
     ships.push((thisShip));
     let coords = getSegmentCoords(x, y, length, orientation);
     //Set the position attribute of relevant cells
     for (let i = 0; i < coords.length; i++) {
       let thisCoord = coords[i];
-
       let segX = thisCoord.x;
       let segY = thisCoord.y;
+      let segCell = board.cells[segX][segY];
+      if (checkNeighboursEmpty(segCell) == false) {
+        return false;
+      }
+
+      // alert('got out of chekcneighbours')
       // console.log(`segX is ${segX}, segY is ${segY}`)
       // console.log(segX);
       // console.log(segY)
@@ -166,27 +195,54 @@ const createBoard = () => {
       thisCell.position = thisShip.segments[i];
       thisCell.ship = thisShip;
     }
+    originCell.ship = thisShip;
+
     return true;
   };
   const receiveAttack = (x, y) => {
     let currentCell = board.cells[x][y];
-    currentCell.hit = true;
-    let currentShip = currentCell.ship;
-    if (currentShip != undefined && currentShip!= null) {
-      //DOSTuff
-      board.getSegmentCoords(x,y,currentShip.length,currentShip.orientation);
-      currentCell.position.hit = true;
-      let sunkShip = currentShip.isSunk();
-      if (sunkShip) {
-        let adjacentCoords;
-        alert('ship sunk');
-        // adjacentCoords.forEach(coord => {
-        //   board.cells[x][y].mustBeEmpty = true;
+    if (currentCell.hit !== true && currentCell.mustBeEmpty !== true) {
+      currentCell.hit = true;
+      let currentShip = currentCell.ship;
+      if (currentShip != undefined && currentShip!= null) {
+        //DOSTuff
+        board.getSegmentCoords(x,y,currentShip.length,currentShip.orientation);
+        currentCell.position.hit = true;
+        let sunkShip = currentShip.isSunk();
+        if (sunkShip) {
+          let adjacentCoords;
+          for (let i = 0;  i<currentShip.segments.length; i++) {
+            let currentSegment = currentShip.segments[i];
 
-        // });
+            console.log(currentShip.segments[i]);
+            //Set neighbours enmpty Must be empty
+            for (let i = -1; i<2; i+=1) {
+              for (let j = -1; j<2; j+=1) {
+        
+                let currentX = currentSegment.x+i;
+                let currentY = currentSegment.y+j;
+                if (inbounds(currentX) && inbounds(currentY)) {
+                  // alert('got here')cell
+                  // alert(`${i}, ${j}`)
+                  if (board.cells[currentX][currentY].ship == undefined) {
+                    board.cells[currentX][currentY].mustBeEmpty = true;
+                  }
+                } 
+              }
+            }
+          }
+          // adjacentCoords.forEach(coord => {
+          //   board.cells[x][y].mustBeEmpty = true;
+  
+          // });
+        }
       }
+      return true;
     }
-    return currentCell;
+    else if (currentCell.hit == true) {
+      return false;
+    }
+    // return currentCell;
   };
   let board = {
     cells,

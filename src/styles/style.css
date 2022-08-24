@@ -27,6 +27,36 @@
   position: absolute ;
 }
 
+
+.gameOver {
+  background-color: var(--hoverBackground);
+  color: var(--LargeText);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  font-size: 56px;
+  height: 100vh;
+  width: 100vw;
+  position: absolute ;
+  z-index: 4;
+
+}
+
+.gameOver>p{
+
+}
+
+.resetButton {
+  z-index: 4;
+  background-color: green;
+  color: #FBBF24;
+  font-size: 36px;
+  padding: 10px 20px;
+}
+
+.resetButton:hover {
+  background-color: rgb(8, 143, 8);
+}
 .active {
   display:flex;
 }

@@ -8,6 +8,7 @@ const createController = () => {
   let boardContainer;
   let player1BoardElem;
   let player2BoardElem;
+  let gameOverPanel;
   let placementShipDiv = document.createElement('div');
   let battleInfoDiv  = document.createElement('div');
   placementShipDiv.classList.add('placementShip');
@@ -17,6 +18,9 @@ const createController = () => {
   <div class="title">
     Battleships
   </div>`;
+
+  let gameOverHTML = `<div><p class="gameOverText">Game is over player wins</p></div>
+  <div class="resetButton">Click to reset</div>`
 
   let contentMenuHTML = `<div class="columnContainer">
   <div class="menuOption pvcBtn">
@@ -86,16 +90,23 @@ const drawBoards = (game,player) => {
           enemyCellElem.innerText = 'X';
         }
         if (currentCell.ship!=undefined) {
+          cellElem.style['background-color'] = 'green'
           if (currentCell.ship.isSunk == true) {
             cellElem.style['background-color'] = 'red';
+
           }
-          else if (currentCell.ship.isSunk != true) {
-            cellElem.style['background-color'] = 'green';
+          else if (currentCell.hit == true) {
+            cellElem.style['background-color'] = 'darkred';
           }
+      
         }
         if (currentEnemyCell.ship!=undefined) {
-          if (currentEnemyCell.ship.isSunk == true || currentEnemyCell.hit == true) {
+          if (currentEnemyCell.ship.isSunk == true) {
+            enemyCellElem.style['background-color'] = 'red';
+          }
+          else if (currentEnemyCell.hit == true) {
             enemyCellElem.style['background-color'] = 'darkred';
+
           }
         }
         if (currentCell.mustBeEmpty == true) {
@@ -115,6 +126,10 @@ const addEventListeners = (game) => {
   handoverPanel.addEventListener('click', event => {
     toggleHandover(handoverPanel);
   })
+  let resetGameButton = document.querySelector('.resetButton');
+  resetGameButton.addEventListener('click', event => {
+    location.reload();
+  })
 }
 
 const renderPlacementShip = (game) => {
@@ -123,12 +138,12 @@ const renderPlacementShip = (game) => {
     let currentShipLength = game.activePlayer.playerShipsToPlace[0];
     let placementShip = game.activePlayer.currentPlacementShip;
     if (placementShip.orientation == 'right') {
-      placementShipDiv.style.width = '36px';
-      placementShipDiv.style.height = `${currentShipLength*36}px`
+      placementShipDiv.style.width = `${currentShipLength*36}px`;
+      placementShipDiv.style.height = '36px';
     }
     else if (placementShip.orientation == 'up') {
-      placementShipDiv.style.width = `${currentShipLength*36}px`
-      placementShipDiv.style.height = `36px`;
+      placementShipDiv.style.width = '36px'
+      placementShipDiv.style.height = `${currentShipLength*36}px`;
     }
     // placementShipDiv.style.innerText = 'UWUWUWUWUWQU'
     // console.log(placementShipDiv);
@@ -185,14 +200,16 @@ const addBoardEventListners = (game) => {
           let currentCell = player1.board.cells[i][j];
           let currentElem = currentCell.cellElem;
           currentElem.addEventListener('click',e => {
+            console.log(currentCell);
+            // alert(`x: ${currentCell.x}, Y:${currentCell.y}`)
+            // alert(currentCell.ship);
             if (currentCell.ship!=undefined) {
-              alert(currentCell.ship.orientation);
+              // alert(currentCell.ship.orientation);
             }
             if (player1.placingShips == true) {
               let x = currentCell.x;
               let y = currentCell.y;
               let orientation = player1.currentPlacementShip.orientation;
-              // alert(orientation);
               let length = player1.playerShipsToPlace[0];
               let team = player1.team;
               // alert('tried placing a ship');
@@ -222,13 +239,12 @@ const addBoardEventListners = (game) => {
         if (t==2) {
           let currentCell = player2.board.cells[i][j];
           let currentElem = currentCell.cellElem;
-          currentElem.style['background-color'] = 'orange';
           currentElem.addEventListener('click',e => {
-            console.log(`active player is ${game.activePlayer.team}`)
-            console.log(`active palyer is attacking? ${game.activePlayer.attacking}`)
+            console.log(currentCell);
+            console.log(`active player is ${game.activePlayer.team}`);
+            console.log(`active palyer is attacking? ${game.activePlayer.attacking}`);
 
             if (player2.placingShips == true) {
-              alert('player 2 placing ships')
               let x = currentCell.x;
               let y = currentCell.y;
               let orientation = player2.currentPlacementShip.orientation;
@@ -271,8 +287,11 @@ const addBoardEventListners = (game) => {
     if (fromScratch == true) {
       content.innerHTML=``
       handOverPanel = document.createElement('div');
+      gameOverPanel = document.createElement('div');
+      gameOverPanel.classList.add('gameOver','inactive');
       handOverPanel.classList.add('handoverPanel','inactive');
       handOverPanel.innerHTML = handOverPanelHTML;
+      gameOverPanel.innerHTML = gameOverHTML;
       gameContainer = document.createElement('div');
       gameContainer.classList.add('gameContainer');
       gameInfo = document.createElement('div');
@@ -290,8 +309,8 @@ const addBoardEventListners = (game) => {
       player2BoardElem = document.createElement("div");
       player2BoardElem.classList.add("player2Board", "board");
       let c  = 0;
-      for (let i = 0; i<10; i++) {
-        for (let j = 0; j<10;j++) {
+      for (let j = 0; j<10; j++) {
+        for (let i = 0; i<10;i++) {
           let boardCellElem = document.createElement("div");
           boardCellElem.classList.add("boardCell");
           boardCellElem.classList.add(`c${c}`);
@@ -314,13 +333,14 @@ const addBoardEventListners = (game) => {
       gameContainer.appendChild(boardContainer);
       gameContainer.appendChild(gameInfoBottom)
       content.appendChild(handOverPanel);
+      content.appendChild(gameOverPanel);
       content.appendChild(gameContainer);
       DOMmanager.drawBoards(game,game.activePlayer);
       addEventListeners();
       addBoardEventListners(game);
     }
     gameInfo.innerText = `current player: player ${game.activePlayer.team}`
-    gameInfoBottom.innerText = `${game.phase}.`
+    gameInfoBottom.innerText = `${game.phase}`
     gameInfoBottom.innerText += `\n When placing ships, press E to change orientation`
     drawBoards(game,game.activePlayer);
   };
@@ -334,7 +354,6 @@ const addBoardEventListners = (game) => {
     let playerVsPlayerBtn = document.querySelector(".pvpBtn");
     playerVsComputerBtn.addEventListener("click", (event) => {
       game.intializeGame(true);
-      alert(game.player1.placingShips)
       DOMmanager.drawGame(game,true);
     });
     playerVsPlayerBtn.addEventListener("click", (event) => {

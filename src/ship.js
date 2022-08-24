@@ -3,8 +3,19 @@ const createShip = (length, x, y, orientation, team) => {
     return false;
   }
   let segments = [];
+  let dx = 0;
+  let dy = 0;
+  if (orientation == 'up') {
+    dy = 1;
+  }
+  else if (orientation == 'right') {
+    dx = 1;
+  }
+
   for (let i = 0; i < length; ++i) {
     segments.push({
+      x: x+(i*dx),
+      y: y+(i*dy),
       hit: false,
     });
   }

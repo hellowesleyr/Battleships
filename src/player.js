@@ -6,7 +6,9 @@ const createPlayer = (robot,team) => {
     let lowPriorityCells = [];
     let board = createBoard();
     let placingShips
-    let playerShipsToPlace = [5,4,4,3,3,3,2,2,2,2];
+    let playerShipsToPlace = [4,4,3,3,2,2];
+    // let playerShipsToPlace = [2];
+
     let currentPlacementShip = {
         placing: false,
         x: undefined,
@@ -21,31 +23,40 @@ const createPlayer = (robot,team) => {
     }
 
     const placeAIShips = () => {
-        let shipsToPlace = [5,4,4,3,3,3,2,2,2,2]
+        let shipsToPlace = [4,4,3,3,2,2]
+        // let shipsToPlace = [2]
+
 
         while (shipsToPlace.length > 0) {
                 let currentLength = shipsToPlace[0];
                 let currentX = getRandomInt(0,9);
                 let currentY = getRandomInt(0,9);
                 let currentOrientation = getRandomOrientation();
-                let successfulPlacement = player.board.placeShip(currentLength,currentX,currentY,currentOrientation,team)
-                if (successfulPlacement == true) {
-                    console.log(`placed a ship`);
+                // alert(`attempting placement at ${currentX}, ${currentY}`)
+                if (player.placePlayerShip(currentLength,currentX,currentY,currentOrientation,team) == true) {
                     shipsToPlace.splice(0,1);
                 }
+                // if (successfulPlacement == true) {
+                //     console.log(`placed a ship`);
+                // }
             }
         player.placingShips = false;
         player.shipsToPlace = [];
     }
 
+
+
     const placePlayerShip = (length,x,y,orientation,team) => {
         if (player.board.placeShip(length,x,y,orientation,team) == true) {
+            // alert('placed ship')
             player.playerShipsToPlace.splice(0,1);
             if (player.playerShipsToPlace.length == 0) {
                 player.placingShips = false;
             }
             console.log(player.playerShipsToPlace);
+            return true;
         }
+        else return false;
     }
 
     const placeShip = (length,x,y,orientation,team) => {
