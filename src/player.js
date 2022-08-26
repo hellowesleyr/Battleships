@@ -6,8 +6,8 @@ const createPlayer = (robot,team) => {
     let lowPriorityCells = [];
     let board = createBoard();
     let placingShips
-    let playerShipsToPlace = [4,4,3,3,2,2];
-    // let playerShipsToPlace = [2];
+    // let playerShipsToPlace = [4,4,3,3,2,2];
+    let playerShipsToPlace = [2];
 
     let currentPlacementShip = {
         placing: false,
@@ -23,8 +23,8 @@ const createPlayer = (robot,team) => {
     }
 
     const placeAIShips = () => {
-        let shipsToPlace = [4,4,3,3,2,2]
-        // let shipsToPlace = [2]
+        // let shipsToPlace = [4,4,3,3,2,2]
+        let shipsToPlace = [2]
 
 
         while (shipsToPlace.length > 0) {
@@ -52,6 +52,7 @@ const createPlayer = (robot,team) => {
             player.playerShipsToPlace.splice(0,1);
             if (player.playerShipsToPlace.length == 0) {
                 player.placingShips = false;
+                
             }
             console.log(player.playerShipsToPlace);
             return true;

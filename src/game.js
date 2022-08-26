@@ -13,6 +13,7 @@ const createGame = () => {
     let gameOver = false;
     let active = false;
     let winner;
+    let switchingPlacements = false;
     const entry = () => {
         DOMmanager.displayMenu();
     }
@@ -39,8 +40,10 @@ const createGame = () => {
         if (singlePlayer == true) {
             game.player2 = createPlayer(true,2);
         }
-        else if (singlePlayer!= true){
+        else if (singlePlayer == false){
             game.player2 = createPlayer(false,2);
+            game.player2.placingShips = true;
+
         }
         game.activePlayer = game.player1;
         game.player1.placingShips = true;
@@ -62,8 +65,8 @@ const createGame = () => {
         if (game.active) {
             DOMmanager.drawGame(game,false)
             if (first == true) {
-                game.player1.placeAIShips();
-                game.player1.placingShips = false;
+                // game.player1.placeAIShips();
+                // game.player1.placingShips = false;
 
                 // passOverTurn(DOMmanager);
                 // passOverTurn(DOMmanager);
@@ -81,17 +84,17 @@ const createGame = () => {
             }
         }
       if (game.active == true) {
-        if (game.player1.board.queryBoardSunk()) {
-            gameOver = true;
+        if (game.player1.board.queryBoardSunk() && game.player1.placingShips == false && game.player2.placingShips == false) {
+            game.gameOver = true;
             game.winner = game.player2;
             game.phase = 'player 2 wins!'
             game.player1.attacking = false;
             game.player2.attacking = false;
             // alert('tried to win');
         }
-        else if (game.player2.board.queryBoardSunk()) {
-            gameOver = true;
-            game.winner = game.player2;
+        else if (game.player2.board.queryBoardSunk() && game.player2.placingShips == false && game.player1.placingShips == false) {
+            game.gameOver = true;
+            game.winner = game.player1;
             game.phase = 'player 1 wins!'
             game.player1.attacking = false;
             game.player2.attacking = false;
@@ -108,16 +111,26 @@ const createGame = () => {
                       // alert(`player 1 is still placing ships?`)
                       
                       game.player2.placingShips = true;
-                      passOverTurn(DOMmanager);
+                      switchingPlacements = true
+                    //   passOverTurn(DOMmanager);
                   }
                   else if (game.player2.robot == true) {
                       game.player2.placingShips = false;
-                  }
-              }
+                    }
+                }
             }
-           if (game.player1.placingShips == false && game.player2.placingShips == true) {
-              game.phase = `player 2 placing ships`
-              game.player2.board.drawBoard();
+            if (game.player1.placingShips == false && game.player2.placingShips == true) {
+                game.phase = `player 2 placing ships`
+                if (switchingPlacements == true) {
+                    passOverTurn(DOMmanager)
+                    // alert(switchingPlacements);
+                    switchingPlacements = false;
+                }
+                // game.activePlayer = game.player2;
+                // if (game.player2.playerShipsToPlace.length == 0) {
+                //     game.activePlayer = player1;
+                // }
+              
            }
            if (game.player1.placingShips == false && game.player2.placingShips == false) {
               DOMmanager.disablePlacementShip()

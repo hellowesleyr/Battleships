@@ -231,7 +231,9 @@ const addBoardEventListners = (game) => {
                 let mouseX = !isTouchDevice() ? e.pageX : e.touches[0].pageX;
                 let mouseY = !isTouchDevice() ? e.pageY : e.touches[0].pageY;
                 shipDiv.style.left = mouseX + 5 + "px";
-                shipDiv.style.top = (mouseY + 5 ) + "px";              
+                shipDiv.style.top = (mouseY + 5 ) + "px";   
+                // shipDiv.style['background-color'] = 'green'
+           
             }
           })
         
@@ -249,11 +251,16 @@ const addBoardEventListners = (game) => {
               let y = currentCell.y;
               let orientation = player2.currentPlacementShip.orientation;
               // alert(orientation);
-              let length = player2.currentPlacementShip.length;
+              let length = player2.playerShipsToPlace[0];
               let team = player2.team;
               // alert('tried placing a ship');
-              if (player2.placeShip(length,x,y,orientation,team) == true) {
-                player2.playerShipsToPlace.splice(0,1);
+              if (player2.placePlayerShip(length,x,y,orientation,team) == true) {
+                if (player2.playerShipsToPlace.length == 0) {
+                  game.activePlayer = game.player1;
+                }
+                // player2.playerShipsToPlace.splice(0,1);
+                // alert(player2.currentPlacementShip.length)
+                console.log(player2.playerShipsToPlace);
                 player2.currentPlacementShip.length = player2.playerShipsToPlace[0];
                 // alert('placed a ship');
                 console.log(`player ship remaining ${player2.playerShipsToPlace}`)
@@ -263,6 +270,18 @@ const addBoardEventListners = (game) => {
             game.makeAttack(currentCell.x,currentCell.y,DOMmanager);
           }
           });
+          currentElem.addEventListener('mouseover',e => {
+            if (game.player2.placingShips == true && game.player1.placingShips == false) {
+              let shipDiv = document.querySelector('.placementShip')
+              shipDiv.style.display = 'flex';
+              player2.currentPlacementShip.x = currentCell.x;
+              player2.currentPlacementShip.y = currentCell.y;
+              let mouseX = !isTouchDevice() ? e.pageX : e.touches[0].pageX;
+              let mouseY = !isTouchDevice() ? e.pageY : e.touches[0].pageY;
+              shipDiv.style.left = mouseX + 5 + "px";
+                shipDiv.style.top = (mouseY + 5 ) + "px";                   
+            }
+          })
         }
         //Hover placement
         // currentElem.addEventListener("mouseover", event => {
